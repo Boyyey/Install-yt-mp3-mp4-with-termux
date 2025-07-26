@@ -1,0 +1,50 @@
+import os
+import subprocess
+
+# Function to check if yt-dlp is installed
+def check_yt_dlp():
+    try:
+        subprocess.run(["yt-dlp", "--version"], capture_output=True, check=T>
+    except FileNotFoundError:
+        print("\n⚠️ yt-dlp not found! Installing...\n")
+        os.system("pkg install yt-dlp -y")
+        print("\n✅ yt-dlp installed successfully!\n")
+
+# Function to list available formats (for debugging)
+def list_formats(url):
+    print("\n📌 Fetching available formats...\n")
+    os.system(f'yt-dlp -F "{url}"')
+
+# Function to download media
+def download_media(url, media_type):
+    storage_path = os.path.expanduser("~/storage/shared")
+
+    if media_type == "audio":
+        folder = "Music"
+        command = f'yt-dlp -x --audio-format mp3 -o "{storage_path}/{folder}>
+    else:
+        folder = "Movies"
+        command = f'yt-dlp -f "bv*+ba/b" -o "{storage_path}/{folder}/%(title>
+
+    print(f"\n⏳ Downloading to {storage_path}/{folder}/ ...\n")
+    os.system(command)
+
+# Main function
+if __name__ == "__main__":
+    check_yt_dlp()
+
+    url = input("\n🎥 Enter YouTube URL: ").strip()
+
+    print("\n🔹 Choose format:")
+    print("   1️⃣ MP3 (Audio)")
+    print("   2️⃣ MP4 (Video)")
+    print("   3️⃣ Show available formats")
+
+    choice = input("📌 Enter 1, 2, or 3: ").strip()
+
+    if choice == "3":
+        list_formats(url)
+    else:
+        media_type = "audio" if choice == "1" else "video"
+        download_media(url, media_type)
+        print("\n✅ Download complete! Check your Music or Movies folder.")
